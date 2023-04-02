@@ -1,9 +1,9 @@
 '''Info Header Start
 Name : CompVersionmanager
-Author : Admin@DESKTOP-RTI312L
+Author : Wieland@AMB-ZEPH15
 Version : 0
-Build : 3
-Savetimestamp : 2022-12-21T19:20:48.620740
+Build : 2
+Savetimestamp : 2023-04-02T21:08:03.807798
 Saveorigin : Project.toe
 Saveversion : 2022.28040
 Info Header End'''
@@ -93,7 +93,7 @@ class CompVersionmanager:
 
 	def update_comment(self, comment:dict):
 		userdomain = ("@" + os.environ.get("userdomain", "") ).removesuffix("@")
-		comment["Author"] 			= self.ownerComp.par.Username.eval()  or (os.getlogin() + userdomain)
+		comment["Author"] 			=  os.getlogin() + userdomain
 		comment["Build"]			= int(comment.get("Build", 0)) + 1
 		comment["Savetimestamp"]	= datetime.datetime.now().isoformat()
 		comment["Saveorigin"]		= project.name

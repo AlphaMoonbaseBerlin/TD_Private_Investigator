@@ -1,9 +1,9 @@
 '''Info Header Start
 Name : CompReleaseManager
-Author : Admin@DESKTOP-RTI312L
+Author : Wieland@AMB-ZEPH15
 Version : 0
-Build : 2
-Savetimestamp : 2022-12-21T19:15:39.997695
+Build : 4
+Savetimestamp : 2023-04-02T21:45:01.121354
 Saveorigin : Project.toe
 Saveversion : 2022.28040
 Info Header End'''
@@ -16,16 +16,26 @@ class CompReleaseManager:
 		# The component to which this extension is attached
 		self.ownerComp = ownerComp
 
+	def prepare(self, target):
+		if self.ownerComp.par.Tag.eval() in target.tags:
+			if hasattr( target.par, "externaltox"):
+				target.par.externaltox = ""
+			if hasattr( target.par, "file"):
+				target.par.file = ""
+			target.tags.remove( self.ownerComp.par.Tag.eval() )
+
 	def Release(self, target_component ):
 		release_candidate = op("/sys/quiet").copy( target_component )
+		
 		for child in release_candidate.findChildren( type = DAT):
-			if hasattr( child.par, "file"):
-				child.par.file = ""
-
+			self.prepare(child)
 		for child in release_candidate.findChildren( type = COMP):
-			if hasattr( child.par, "externaltox"):
-				child.par.externaltox = ""
+			self.prepare( child )
 
-		release_candidate.par.externaltox = ""
+		self.prepare( release_candidate )
+
+		prerelease_script= release_candidate.op("pre_release")
+		if isinstance( prerelease_script, textDAT): prerelease_script.run()
+		
 		release_candidate.save( os.path.join( self.ownerComp.par.Folder.eval(), target_component.name) + ".tox", createFolders = True)
 		release_candidate.destroy()

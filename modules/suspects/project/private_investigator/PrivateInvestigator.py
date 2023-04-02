@@ -1,9 +1,9 @@
 '''Info Header Start
 Name : PrivateInvestigator
-Author : Admin@DESKTOP-RTI312L
+Author : Wieland@AMB-ZEPH15
 Version : 0
-Build : 2
-Savetimestamp : 2022-12-21T19:15:17.029961
+Build : 4
+Savetimestamp : 2023-04-02T21:06:39.568534
 Saveorigin : Project.toe
 Saveversion : 2022.28040
 Info Header End'''
@@ -21,7 +21,7 @@ class PrivateInvestigator:
 	def Scan(self):
 		self.ownerComp.op("suspects").clear( keepFirstRow = True )
 		for child in self.possible_suspects( COMP ):
-			if not getattr( child.par, "Vcoriginal"): continue
+			if not getattr( child.par, "Vcoriginal", None): continue
 			self.ownerComp.op("suspects").appendRow( child.path )
 		for child in self.possible_suspects( textDAT ):
 			self.ownerComp.op("suspects").appendRow( child.path )
