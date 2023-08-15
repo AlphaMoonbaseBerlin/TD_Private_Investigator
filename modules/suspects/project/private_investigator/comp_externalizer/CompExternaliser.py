@@ -1,9 +1,5 @@
 '''Info Header Start
-Name : CompExternaliser
-Author : Admin@DESKTOP-RTI312L
-Version : 0
-Build : 2
-Savetimestamp : 2022-12-21T19:15:34.210622
+Author : Wieland@AMB-ZEPH15
 Saveorigin : Project.toe
 Saveversion : 2022.28040
 Info Header End'''

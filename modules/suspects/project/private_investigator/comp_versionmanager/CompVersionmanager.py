@@ -1,9 +1,5 @@
 '''Info Header Start
-Name : CompVersionmanager
 Author : Wieland@AMB-ZEPH15
-Version : 0
-Build : 5
-Savetimestamp : 2023-04-02T21:06:37.533232
 Saveorigin : Project.toe
 Saveversion : 2022.28040
 Info Header End'''

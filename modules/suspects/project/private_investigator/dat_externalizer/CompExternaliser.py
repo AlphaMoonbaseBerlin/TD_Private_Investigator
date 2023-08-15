@@ -1,9 +1,5 @@
 '''Info Header Start
-Name : CompExternaliser
-Author : Admin@DESKTOP-RTI312L
-Version : 0
-Build : 2
-Savetimestamp : 2022-12-21T19:15:54.092362
+Author : Wieland@AMB-ZEPH15
 Saveorigin : Project.toe
 Saveversion : 2022.28040
 Info Header End'''
@@ -23,8 +19,9 @@ class CompExternaliser:
 	def Init(self, target_operator):
 		joined_savepath =  pathjoin( self.ownerComp.par.Folder.eval(), target_operator.path ) + "." + target_operator.par.extension.eval()
 		savepath = target_operator.save( joined_savepath , createFolders = True)
-		target_operator.par.file 		= savepath
-		target_operator.par.loadonstart = True
+		target_operator.par.file.val		= savepath
+		target_operator.par.loadonstart.val = True
+		target_operator.par.syncfile.val 	= True
 
 	def Save(self, target_operator):
 		if target_operator.par.file.eval():

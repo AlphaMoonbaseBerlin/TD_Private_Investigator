@@ -1,14 +1,10 @@
 '''Info Header Start
-Name : CompVersionmanager
 Author : Wieland@AMB-ZEPH15
-Version : 0
-Build : 2
-Savetimestamp : 2023-04-02T21:08:03.807798
 Saveorigin : Project.toe
 Saveversion : 2022.28040
 Info Header End'''
-import TDFunctions
-import os, datetime, re
+
+import os, re
 class CompVersionmanager:
 	"""
 	CompVersionmanager description
@@ -31,22 +27,21 @@ class CompVersionmanager:
 		if language == "languageext" : 
 			target_operator.par.extension = self.ownerComp.par.Defaultdatextension.eval()
 			language = target_operator.par.extension.eval()
-		target_operator.text = "\n" + target_operator.text
+		target_operator.text = target_operator.text
 		text 				= target_operator.text
 		comment_definition 	= self.comment_definition.get(language, self.comment_definition["default"] )
-		comment 			= self.find_comment( text, comment_definition)
-		if comment: return
-		initital_comment = self.update_comment({
-			"Name" : target_operator.name,
-			"Author" : "",
-			"Version" : 0,
-			"Build" : 0,
-			"Savetimestamp" : 0,
-			"Saveorigin" : "",
-			"Saveversion" : ""
-		})
-		self.update_comment( initital_comment )
-		self.write_comment( target_operator, initital_comment)
+		comment 			= self.find_comment( text, comment_definition )
+		if comment: 
+			self.Update( target_operator )
+		else:
+			commentDict = {
+				"Author" : "",
+				"Saveorigin" : "",
+				"Saveversion" : ""
+			}
+		
+			self.update_comment( commentDict )
+			self.write_comment( target_operator, commentDict)
 
 
 	def parse_comment(self, text):
@@ -94,10 +89,15 @@ class CompVersionmanager:
 	def update_comment(self, comment:dict):
 		userdomain = ("@" + os.environ.get("userdomain", "") ).removesuffix("@")
 		comment["Author"] 			=  os.getlogin() + userdomain
-		comment["Build"]			= int(comment.get("Build", 0)) + 1
-		comment["Savetimestamp"]	= datetime.datetime.now().isoformat()
 		comment["Saveorigin"]		= project.name
 		comment["Saveversion"]		= var("CUR_TOUCHBUILD")
+		
+		#cleanup!
+		comment.pop("Build", None)
+		comment.pop("Version", None)
+		comment.pop("Savetimestamp", None)
+		comment.pop("Name", None)
+		
 		return comment
 
 	def find_comment(self, text, definition):

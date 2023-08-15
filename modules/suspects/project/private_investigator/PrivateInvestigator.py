@@ -1,9 +1,5 @@
 '''Info Header Start
-Name : PrivateInvestigator
 Author : Wieland@AMB-ZEPH15
-Version : 0
-Build : 4
-Savetimestamp : 2023-04-02T21:06:39.568534
 Saveorigin : Project.toe
 Saveversion : 2022.28040
 Info Header End'''
@@ -17,6 +13,10 @@ class PrivateInvestigator:
 	
 	def possible_suspects(self, op_type):
 		return self.ownerComp.par.Root.eval().findChildren(type = op_type, tags = [self.ownerComp.par.Tag.eval()])
+	
+	def ReinitSuspects(self):
+		for suspect in self.possible_suspects(textDAT) + self.possible_suspects(COMP) :
+			self.Add( suspect )
 
 	def Scan(self):
 		self.ownerComp.op("suspects").clear( keepFirstRow = True )
@@ -37,6 +37,7 @@ class PrivateInvestigator:
 
 	@property
 	def State(self):
+		return False
 		for item in self.ownerComp.op("state").col("dirty")[1:]:
 			if int(item): return True
 		return False

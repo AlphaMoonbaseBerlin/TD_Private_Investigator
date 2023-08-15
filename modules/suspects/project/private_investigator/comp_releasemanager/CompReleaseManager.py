@@ -1,9 +1,5 @@
 '''Info Header Start
-Name : CompReleaseManager
 Author : Wieland@AMB-ZEPH15
-Version : 0
-Build : 4
-Savetimestamp : 2023-04-02T21:45:01.121354
 Saveorigin : Project.toe
 Saveversion : 2022.28040
 Info Header End'''
