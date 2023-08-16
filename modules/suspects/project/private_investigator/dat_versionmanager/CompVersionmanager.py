@@ -1,10 +1,14 @@
+
+
+
 '''Info Header Start
+Name : CompVersionmanager
 Author : Wieland@AMB-ZEPH15
 Saveorigin : Project.toe
 Saveversion : 2022.28040
 Info Header End'''
-
-import os, re
+import TDFunctions
+import os, datetime, re
 class CompVersionmanager:
 	"""
 	CompVersionmanager description
@@ -27,22 +31,20 @@ class CompVersionmanager:
 		if language == "languageext" : 
 			target_operator.par.extension = self.ownerComp.par.Defaultdatextension.eval()
 			language = target_operator.par.extension.eval()
-		target_operator.text = target_operator.text
+		target_operator.text = "\n" + target_operator.text
 		text 				= target_operator.text
 		comment_definition 	= self.comment_definition.get(language, self.comment_definition["default"] )
-		comment 			= self.find_comment( text, comment_definition )
-		if comment: 
-			self.Update( target_operator )
-		else:
-			commentDict = {
+		comment 			= self.find_comment( text, comment_definition)
+		if not comment:
+			initital_comment = self.update_comment({
+				"Name" : target_operator.name,
 				"Author" : "",
 				"Saveorigin" : "",
 				"Saveversion" : ""
-			}
-		
-			self.update_comment( commentDict )
-			self.write_comment( target_operator, commentDict)
-
+			})
+			self.update_comment( initital_comment )
+			self.write_comment( target_operator, initital_comment)
+		self.Update( target_operator )
 
 	def parse_comment(self, text):
 		comment_dict = {}
@@ -89,15 +91,15 @@ class CompVersionmanager:
 	def update_comment(self, comment:dict):
 		userdomain = ("@" + os.environ.get("userdomain", "") ).removesuffix("@")
 		comment["Author"] 			=  os.getlogin() + userdomain
+		comment["Build"]			= int(comment.get("Build", 0)) + 1
 		comment["Saveorigin"]		= project.name
 		comment["Saveversion"]		= var("CUR_TOUCHBUILD")
-		
-		#cleanup!
-		comment.pop("Build", None)
+			#"Version" : 0,
+			#"Build" : 0,
+			#"Savetimestamp" : 0,
 		comment.pop("Version", None)
+		comment.pop("Build", None)
 		comment.pop("Savetimestamp", None)
-		comment.pop("Name", None)
-		
 		return comment
 
 	def find_comment(self, text, definition):

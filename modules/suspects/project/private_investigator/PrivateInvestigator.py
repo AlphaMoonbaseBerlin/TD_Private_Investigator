@@ -3,6 +3,8 @@ Author : Wieland@AMB-ZEPH15
 Saveorigin : Project.toe
 Saveversion : 2022.28040
 Info Header End'''
+
+
 class PrivateInvestigator:
 	"""
 	PrivateInvestigator description
@@ -62,11 +64,6 @@ class PrivateInvestigator:
 		pass
 
 	def Save(self, operator):
-		if isinstance(operator, textDAT): 
-			self.ownerComp.op("dat_versionmanager").Update( operator )
-			self.ownerComp.op("dat_externalizer").Save( operator )
-			self.ownerComp.op("dat_dirtwatcher").Clean( operator )
-
 		if isinstance(operator, COMP)	: 
 			operator.par.Vcoriginal.val = False
 			self.ownerComp.op("comp_versionmanager").Update( operator )
