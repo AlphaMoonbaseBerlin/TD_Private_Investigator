@@ -31,9 +31,9 @@ class CompReleaseManager:
 			debug( f"Failed to run prereleasescript of {target}. Reason\n{e}")
 
 	def Release(self, target_component ):
-		release_candidate = self.ownerComp.op( "/sys/quiet" ).copy( target_component )
+		release_candidate = op( "/sys/quiet" ).copy( target_component )
 		
-		release_candidate.allowCooking = self.ownerComp.par.Releasemode.eval() == "loud"
+		op( "/sys/quiet" ).allowCooking = self.ownerComp.par.Releasemode.eval() == "loud"
 		for child in release_candidate.findChildren( type = DAT):
 			self.prepare(child)
 		for child in release_candidate.findChildren( type = COMP):
@@ -45,3 +45,4 @@ class CompReleaseManager:
 		
 		release_candidate.save( os.path.join( self.ownerComp.par.Folder.eval(), target_component.name) + ".tox", createFolders = True)
 		release_candidate.destroy()
+		op( "/sys/quiet" ).allowCooking = False
