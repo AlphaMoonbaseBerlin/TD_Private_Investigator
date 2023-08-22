@@ -39,9 +39,8 @@ class PrivateInvestigator:
 
 	@property
 	def State(self):
-		return False
-		for item in self.ownerComp.op("state").col("dirty")[1:]:
-			if int(item): return True
+		for cell in self.ownerComp.op("state").col("Dirty")[1:]:
+			if cell.val == "True": return True
 		return False
 
 	def Add(self, operator):
