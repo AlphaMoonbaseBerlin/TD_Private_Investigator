@@ -1,12 +1,30 @@
-from _typeshed import Incomplete
+"""Info Header Start
+Author : Wieland@AMB-ZEPH15
+Saveorigin : Project.toe
+Saveversion : 2022.32660
+Info Header End"""
+import os
 from typing import Union
-
 Suspect = Union[textDAT, COMP]
+import functools, pathlib
+import naiveStubser
 
 class CompReleaseManager:
-    ownerComp: Incomplete
-    def __init__(self, ownerComp) -> None: ...
-    def createStubs(self, target: textDAT, meta: dict): ...
-    def prepare(self, target: Suspect, meta: dict): ...
-    def run_prerelease(self, target: COMP): ...
-    def Release(self, target_component: COMP): ...
+    """
+	CompReleaseManager description
+	"""
+
+    def __init__(self, ownerComp):
+        pass
+
+    def createStubs(self, target: textDAT, meta: dict):
+        pass
+
+    def prepare(self, target: Suspect, meta: dict):
+        pass
+
+    def run_prerelease(self, target: COMP):
+        pass
+
+    def Release(self, target_component: COMP):
+        pass

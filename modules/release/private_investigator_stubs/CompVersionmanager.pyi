@@ -1,8 +1,24 @@
-from _typeshed import Incomplete
+"""Info Header Start
+Author : Wieland@AMB-ZEPH15
+Saveorigin : Project.toe
+Saveversion : 2022.28040
+Info Header End"""
+import TDFunctions
+import os, datetime
 
 class CompVersionmanager:
-    ownerComp: Incomplete
-    def __init__(self, ownerComp) -> None: ...
-    def Init(self, target_operator) -> None: ...
-    def Update(self, target_operator) -> None: ...
-    def Get_Info_Dict(self, target_operator): ...
+    """
+	CompVersionmanager description
+	"""
+
+    def __init__(self, ownerComp):
+        pass
+
+    def Init(self, target_operator):
+        pass
+
+    def Update(self, target_operator):
+        pass
+
+    def Get_Info_Dict(self, target_operator):
+        pass

@@ -8,6 +8,7 @@ import os
 from typing import Union
 Suspect = Union[textDAT, COMP]
 import functools, pathlib
+import naiveStubser
 
 class CompReleaseManager:
 	"""
@@ -16,22 +17,17 @@ class CompReleaseManager:
 	def __init__(self, ownerComp):
 		# The component to which this extension is attached
 		self.ownerComp = ownerComp
-	
-	@functools.lru_cache(maxsize=1)
-	def _Stubgen(self):
-		self.ownerComp.op("td_pip").Import_Module("mypy")
-		import mypy.stubgen
-		return mypy.stubgen.main
-	
-	
+		
 	def createStubs(self, target:textDAT, meta:dict):
 		if not self.ownerComp.par.Generatestubs.eval(): return
-		outputPath = pathlib.Path( ".", self.ownerComp.par.Folder.eval(), f'{meta["compName"]}_stubs')
-		self._Stubgen()([
-			target.par.file.eval(),
-			"-o",
-			str(outputPath).replace("\\", "/")
-		])
+		sourcePath = pathlib.Path( target.par.file.eval() )
+		outputPath = pathlib.Path( 
+			self.ownerComp.par.Folder.eval(), 
+			f'{meta["compName"]}_stubs', 
+			sourcePath.with_suffix(".pyi").name )
+		outputPath.parent.mkdir(parents=True, exist_ok=True)
+		outputPath.touch(exist_ok=True)
+		outputPath.write_text( naiveStubser.stubify(target.text))
 		return
 
 	def prepare(self, target:Suspect, meta:dict):
