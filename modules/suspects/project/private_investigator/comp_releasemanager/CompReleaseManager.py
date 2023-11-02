@@ -2,9 +2,13 @@
 '''Info Header Start
 Author : Wieland@AMB-ZEPH15
 Saveorigin : Project.toe
-Saveversion : 2022.28040
+Saveversion : 2022.32660
 Info Header End'''
 import os
+from typing import Union
+Suspect = Union[textDAT, COMP]
+import functools, pathlib
+
 class CompReleaseManager:
 	"""
 	CompReleaseManager description
@@ -12,34 +16,57 @@ class CompReleaseManager:
 	def __init__(self, ownerComp):
 		# The component to which this extension is attached
 		self.ownerComp = ownerComp
+	
+	@functools.lru_cache(maxsize=1)
+	def _Stubgen(self):
+		self.ownerComp.op("td_pip").Import_Module("mypy")
+		import mypy.stubgen
+		return mypy.stubgen.main
+	
+	
+	def createStubs(self, target:textDAT, meta:dict):
+		if not self.ownerComp.par.Generatestubs.eval(): return
+		outputPath = pathlib.Path( ".", self.ownerComp.par.Folder.eval(), f'{meta["compName"]}_stubs')
+		self._Stubgen()([
+			target.par.file.eval(),
+			"-o",
+			str(outputPath).replace("\\", "/")
+		])
+		return
 
-	def prepare(self, target):
+	def prepare(self, target:Suspect, meta:dict):
 		if self.ownerComp.par.Tag.eval() in target.tags:
 			if hasattr( target.par, "externaltox"):
 				target.par.externaltox = ""
 			if hasattr( target.par, "file"):
+				self.createStubs( target, meta)
 				target.par.file = ""
 			if isinstance( target, COMP):
 				self.run_prerelease( target )
 			target.tags.remove( self.ownerComp.par.Tag.eval() )
 
-	def run_prerelease(self, target):
+	def run_prerelease(self, target:COMP):
 		prerelease_script = target.op("pre_release") or self.ownerComp.op("empty_prerelease")
 		try:
 			prerelease_script.run()
 		except Exception as e:
 			debug( f"Failed to run prereleasescript of {target}. Reason\n{e}")
 
-	def Release(self, target_component ):
-		release_candidate = op( "/sys/quiet" ).copy( target_component )
-		
+	def Release(self, target_component:COMP ):
+		for child in op( "/sys/quiet" ).findChildren( depth=1):
+			child.destroy()
+
+		release_candidate:COMP = op( "/sys/quiet" ).copy( target_component )
+		meta = {
+			"compName" : release_candidate.name
+		}
 		op( "/sys/quiet" ).allowCooking = self.ownerComp.par.Releasemode.eval() == "loud"
 		for child in release_candidate.findChildren( type = DAT):
-			self.prepare(child)
+			self.prepare(child, meta)
 		for child in release_candidate.findChildren( type = COMP):
-			self.prepare( child )
+			self.prepare( child, meta )
 
-		self.prepare( release_candidate )
+		self.prepare( release_candidate, meta )
 		self.run_prerelease( release_candidate )
 		
 		
