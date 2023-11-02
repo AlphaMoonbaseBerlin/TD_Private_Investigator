@@ -1,10 +1,8 @@
 
+
+
 '''Info Header Start
-Name : DatDirtWatcher
-Author : Admin@DESKTOP-RTI312L
-Version : 0
-Build : 2
-Savetimestamp : 2022-12-21T19:15:59.130140
+Author : Wieland@AMB-ZEPH15
 Saveorigin : Project.toe
 Saveversion : 2022.28040
 Info Header End'''
@@ -19,6 +17,7 @@ class DatDirtWatcher:
 		self.ownerComp = ownerComp
 
 	def Snoop(self, target_operator):
+		return False
 		old_texthash = target_operator.fetch("texthash", "")
 		texthash = hashlib.md5(target_operator.text.encode()).hexdigest()
 		return texthash != old_texthash

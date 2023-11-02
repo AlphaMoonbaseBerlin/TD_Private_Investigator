@@ -1,9 +1,9 @@
+
+
+
+
 '''Info Header Start
-Name : CompVersionmanager
 Author : Wieland@AMB-ZEPH15
-Version : 0
-Build : 5
-Savetimestamp : 2023-04-02T21:06:37.533232
 Saveorigin : Project.toe
 Saveversion : 2022.28040
 Info Header End'''
@@ -39,7 +39,7 @@ class CompVersionmanager:
 		userdomain = ("@" + os.environ.get("userdomain", "") ).removesuffix("@")
 		target_operator.par.Vcauthor = self.ownerComp.par.Username.eval()  or (os.getlogin() + userdomain)
 		target_operator.par.Vcbuild.val = target_operator.par.Vcbuild.eval() + 1
-		target_operator.par.Vcsavetimestamp = datetime.datetime.now().isoformat()
+		target_operator.par.Vcsavetimestamp = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
 		target_operator.par.Vcsaveorigin = project.name
 		target_operator.par.Vcsaveversion.val = project.saveBuild
 		pass

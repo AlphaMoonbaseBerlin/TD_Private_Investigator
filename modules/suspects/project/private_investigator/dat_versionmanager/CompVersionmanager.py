@@ -1,9 +1,9 @@
+
+
+
 '''Info Header Start
 Name : CompVersionmanager
 Author : Wieland@AMB-ZEPH15
-Version : 0
-Build : 2
-Savetimestamp : 2023-04-02T21:08:03.807798
 Saveorigin : Project.toe
 Saveversion : 2022.28040
 Info Header End'''
@@ -35,19 +35,16 @@ class CompVersionmanager:
 		text 				= target_operator.text
 		comment_definition 	= self.comment_definition.get(language, self.comment_definition["default"] )
 		comment 			= self.find_comment( text, comment_definition)
-		if comment: return
-		initital_comment = self.update_comment({
-			"Name" : target_operator.name,
-			"Author" : "",
-			"Version" : 0,
-			"Build" : 0,
-			"Savetimestamp" : 0,
-			"Saveorigin" : "",
-			"Saveversion" : ""
-		})
-		self.update_comment( initital_comment )
-		self.write_comment( target_operator, initital_comment)
-
+		if not comment:
+			initital_comment = self.update_comment({
+				"Name" : target_operator.name,
+				"Author" : "",
+				"Saveorigin" : "",
+				"Saveversion" : ""
+			})
+			self.update_comment( initital_comment )
+			self.write_comment( target_operator, initital_comment)
+		self.Update( target_operator )
 
 	def parse_comment(self, text):
 		comment_dict = {}
@@ -95,9 +92,14 @@ class CompVersionmanager:
 		userdomain = ("@" + os.environ.get("userdomain", "") ).removesuffix("@")
 		comment["Author"] 			=  os.getlogin() + userdomain
 		comment["Build"]			= int(comment.get("Build", 0)) + 1
-		comment["Savetimestamp"]	= datetime.datetime.now().isoformat()
 		comment["Saveorigin"]		= project.name
 		comment["Saveversion"]		= var("CUR_TOUCHBUILD")
+			#"Version" : 0,
+			#"Build" : 0,
+			#"Savetimestamp" : 0,
+		comment.pop("Version", None)
+		comment.pop("Build", None)
+		comment.pop("Savetimestamp", None)
 		return comment
 
 	def find_comment(self, text, definition):

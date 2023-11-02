@@ -1,3 +1,5 @@
 TDImportCache
 backup
 olib
+*__pycache__*
+.mypy_cache
