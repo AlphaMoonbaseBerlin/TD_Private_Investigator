@@ -5,6 +5,7 @@ Saveversion : 2022.32660
 Info Header End'''
 
 from typing import Union
+import os 
 
 Suspect = Union[DAT,COMP]
 
@@ -15,7 +16,12 @@ class PrivateInvestigator:
 	def __init__(self, ownerComp):
 		# The component to which this extension is attached
 		self.ownerComp:COMP = ownerComp
-		
+	
+	@property
+	def PrefabAuthor(self):
+		userdomain = ("@" + os.environ.get("userdomain", "") ).removesuffix("@")
+		return os.getlogin() + userdomain
+
 	def possible_suspects(self, op_type:str):
 		return self.ownerComp.par.Root.eval().findChildren(type = op_type, tags = [self.ownerComp.par.Tag.eval()])
 	
