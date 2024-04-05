@@ -22,6 +22,10 @@ class PrivateInvestigator:
 		userdomain = ("@" + os.environ.get("userdomain", "") ).removesuffix("@")
 		return os.getlogin() + userdomain
 
+	@property
+	def Author(self):
+		return self.ownerComp.par.Username.eval()
+
 	def possible_suspects(self, op_type:str):
 		return self.ownerComp.par.Root.eval().findChildren(type = op_type, tags = [self.ownerComp.par.Tag.eval()])
 	
@@ -71,8 +75,32 @@ class PrivateInvestigator:
 		self.Update()
 		pass
 
+	
 	def Save(self, operator:COMP):
 		if isinstance(operator, COMP)	: 
+			operatorACLGroup = self.ownerComp.op("comp_versionmanager").GetGroup( operator )
+			
+			if self.ownerComp.par.Useac.eval() and operatorACLGroup:
+				#Fetch all groups that match the Operator ACL Group. Wildcards supported.
+				
+				groupKeys = tdu.match(
+					operatorACLGroup, list( self.ownerComp.op("ACL").Data.Groups.keys() )
+				)
+				isAllowed = False
+				
+				for groupKey in groupKeys:
+					groupList = [ item.Value for item in self.ownerComp.op("ACL").Data.Groups.get( groupKey, []) ]
+					for member in groupList:
+						isAllowed = bool( tdu.match( member, [self.Author]) )
+						if isAllowed: break
+					if isAllowed: break
+				else:
+					ui.messageBox(
+						"No Access", 
+						f"You are not part of the group {operatorACLGroup}. Please update ACL or Cancel the Operation.", 
+						buttons=["OK"] )
+					return False
+							
 			operator.par.Vcoriginal.val = False
 			self.ownerComp.op("comp_versionmanager").Update( operator )
 			self.ownerComp.op("comp_externalizer").Save( operator )

@@ -1,6 +1,3 @@
-
-
-
 '''Info Header Start
 Author : Wieland@AMB-ZEPH15
 Saveorigin : Project.toe
@@ -31,6 +28,7 @@ class CompVersionmanager:
 			except tdError as e:
 				pass
 		target_operator.par.Vcoriginal = True
+		target_operator.par.Vcgroup.val = parent().par.Defaultgroup.eval()
 		self.Update( target_operator )
 
 	def Update(self, target_operator):
@@ -43,6 +41,13 @@ class CompVersionmanager:
 		target_operator.par.Vcsaveversion.val = project.saveBuild
 		pass
 	
+	def GetGroup(self, target_operator):
+		try:
+			return target_operator.par.Vcgroup.eval()
+		except AttributeError:
+			return ""
+		
+	
 	def Get_Info_Dict(self, target_operator):
 		return {
 			"Name"	 : target_operator.par.Vcname.eval(),
@@ -52,5 +57,6 @@ class CompVersionmanager:
 			"Savetimestamp" : target_operator.par.Vcsavetimestamp.eval(),
 			"Saveorigin"	: target_operator.par.Vcsaveorigin.eval(),
 			"Saveversion"	: target_operator.par.Vcsaveversion.eval(),
+			"Group" 		: self.GetGroup( target_operator )
 		}
 		
