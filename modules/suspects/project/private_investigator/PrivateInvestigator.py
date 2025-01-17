@@ -1,10 +1,10 @@
 '''Info Header Start
 Author : Wieland@AMB-ZEPH15
 Saveorigin : Project.toe
-Saveversion : 2022.32660
+Saveversion : 2023.12000
 Info Header End'''
 
-from typing import Union
+from typing import Union, List
 import os 
 
 Suspect = Union[DAT,COMP]
@@ -75,6 +75,19 @@ class PrivateInvestigator:
 		self.Update()
 		pass
 
+
+
+	def Dirty(self):
+		return [
+			op( row[0].val ) for row in self.ownerComp.op("state").rows()[1:] if row[8].val == "True"
+		]
+	
+	def SaveAllDirty(self):
+		self.SaveItems( self.Dirty )
+	
+	def SaveItems(self, items:List[COMP]):
+		for item in items:
+			self.Save( item )
 	
 	def Save(self, operator:COMP):
 		if isinstance(operator, COMP)	: 
