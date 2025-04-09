@@ -1,8 +1,8 @@
 
 '''Info Header Start
-Author : Wieland@AMB-ZEPH15
+Author : Wieland PlusPlusOne@AMB-ZEPH15
 Saveorigin : Project.toe
-Saveversion : 2022.32660
+Saveversion : 2023.12000
 Info Header End'''
 import os
 from typing import Union
@@ -20,14 +20,17 @@ class CompReleaseManager:
 		
 	def createStubs(self, target:textDAT, meta:dict):
 		if not self.ownerComp.par.Generatestubs.eval(): return
-		sourcePath = pathlib.Path( target.par.file.eval() )
-		outputPath = pathlib.Path( 
-			self.ownerComp.par.Folder.eval(), 
-			f'{meta["compName"]}_stubs', 
-			sourcePath.with_suffix(".pyi").name )
-		outputPath.parent.mkdir(parents=True, exist_ok=True)
-		outputPath.touch(exist_ok=True)
-		outputPath.write_text( naiveStubser.stubify(target.text))
+		try:
+			sourcePath = pathlib.Path( target.par.file.eval() )
+			outputPath = pathlib.Path( 
+				self.ownerComp.par.Folder.eval(), 
+				f'{meta["compName"]}_stubs', 
+				sourcePath.with_suffix(".pyi").name )
+			outputPath.parent.mkdir(parents=True, exist_ok=True)
+			outputPath.touch(exist_ok=True)
+			outputPath.write_text( naiveStubser.stubify(target.text))
+		except Exception as e:
+			debug("Exception while creating Stubs", e)
 		return
 
 	def prepare(self, target:Suspect, meta:dict):
@@ -67,5 +70,6 @@ class CompReleaseManager:
 		
 		
 		release_candidate.save( os.path.join( self.ownerComp.par.Folder.eval(), target_component.name) + ".tox", createFolders = True)
+		
 		release_candidate.destroy()
 		op( "/sys/quiet" ).allowCooking = False

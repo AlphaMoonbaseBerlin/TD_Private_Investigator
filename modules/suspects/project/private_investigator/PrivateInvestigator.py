@@ -1,5 +1,5 @@
 '''Info Header Start
-Author : Wieland@AMB-ZEPH15
+Author : Wieland PlusPlusOne@AMB-ZEPH15
 Saveorigin : Project.toe
 Saveversion : 2023.12000
 Info Header End'''
@@ -76,20 +76,47 @@ class PrivateInvestigator:
 		pass
 
 
-
-	def Dirty(self):
+	@property
+	def Suspects(self):
+		return [
+			op( row[0].val ) for row in self.ownerComp.op("state").rows()[1:]
+		]
+	@property
+	def DirtySuspects(self):
 		return [
 			op( row[0].val ) for row in self.ownerComp.op("state").rows()[1:] if row[8].val == "True"
 		]
 	
-	def SaveAllDirty(self):
-		self.SaveItems( self.Dirty )
 	
+	
+	def SaveAllDirty(self):
+		"""
+			Saves all components that are marked as dirty.
+		"""
+		self.SaveItems( self.DirtySuspects )
+
+	
+	def ResaveAll(self):
+		"""
+			Force all Components to be resaved, even if they might not be marked as dirty.
+		"""
+		self.SaveItems( self.Suspects )
+	
+	def ReleaseAll(self):
+		for suspect in self.Suspects:
+			self.Release(suspect)
+
 	def SaveItems(self, items:List[COMP]):
+		"""
+			Save a list of given operators.
+		"""
 		for item in items:
 			self.Save( item )
 	
 	def Save(self, operator:COMP):
+		"""
+			Save the given operator.
+		"""
 		if isinstance(operator, COMP)	: 
 			operatorACLGroup = self.ownerComp.op("comp_versionmanager").GetGroup( operator )
 			
