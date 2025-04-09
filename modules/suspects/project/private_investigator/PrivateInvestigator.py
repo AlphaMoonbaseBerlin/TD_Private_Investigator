@@ -145,7 +145,9 @@ class PrivateInvestigator:
 			self.ownerComp.op("comp_versionmanager").Update( operator )
 			self.ownerComp.op("comp_externalizer").Save( operator )
 			operator.par.Vcoriginal.val = True
-
+		elif isinstance( operator, textDAT):
+			self.ownerComp.op("dat_versionmanager").Update( operator )
+			self.ownerComp.op("dat_externalizer").Save( operator )
 		self.Update()
 		pass
 
